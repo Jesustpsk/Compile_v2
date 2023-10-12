@@ -1,0 +1,19 @@
+program var
+    id1, id2, id3 : integer;
+    id4, id5 : real;
+    id6, id7, id8 : boolean;
+begin
+    let id1 = 10;
+    let id2 = id1 + 5;
+    let id3 = id2 * 2;
+    
+    for each id in (1, 2, 3)
+    begin
+        writeln id;
+    end
+    
+    switch id3
+    case 1: writeln "One";
+    case 2: writeln "Two";
+    case 3: writeln "Three";
+    end. 
