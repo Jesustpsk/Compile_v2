@@ -35,27 +35,25 @@ public class LexicalAnalyze
         foreach (Match match in matches)
         {
             separators.Add(new Token(match.Value, Token.TokenType.Separator));
-            temp = temp.Replace(match.Value, ""); //починить проблему с разделением integer на in и teger
+            temp = temp.Replace(match.Value, "");
         }
         
         matches = keyWordsRegex.Matches(temp);
         foreach (Match match in matches)
         {
             keyWords.Add(new Token(match.Value, Token.TokenType.KeyWord));
-            temp = temp.Replace(match.Value, "");
+            temp = String.Join(" ", temp.Split(new[] { " ", "\r\n" }, 
+                StringSplitOptions.RemoveEmptyEntries).ToList().Where(x => x != match.Value).ToList());
         }
 
         matches = identifierRegex.Matches(temp);
         foreach (Match match in matches)
         {
-            if (!keyWordsList.Contains(match.Value))
-            {
-                variables.Add(new Token(match.Value, Token.TokenType.Variable));
-                temp = temp.Replace(match.Value, "");
-            }
+            if (keyWordsList.Contains(match.Value)) continue;
+            variables.Add(new Token(match.Value, Token.TokenType.Variable));
+            temp = temp.Replace(match.Value, "");
         }
 
-        //temp = string.Join(" ", tempList);
         matches = digitsRegex.Matches(temp);
         foreach (Match match in matches)
         {
@@ -75,7 +73,6 @@ public class LexicalAnalyze
             if(lOut.Count(t => t.Value != list[i].Value) == lOut.Count)
                 lOut.Add(list[i]);
         }
-
         return lOut;
     }
 }
