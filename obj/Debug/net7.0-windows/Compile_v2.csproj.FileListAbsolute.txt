@@ -39,3 +39,24 @@ C:\Users\dmkuz\OneDrive\Рабочий стол\Compile_v2\obj\Debug\net7.0-wind
 C:\Users\dmkuz\OneDrive\Рабочий стол\Compile_v2\obj\Debug\net7.0-windows\Compile_v2.pdb
 C:\Users\dmkuz\OneDrive\Рабочий стол\Compile_v2\obj\Debug\net7.0-windows\Compile_v2.genruntimeconfig.cache
 C:\Users\dmkuz\OneDrive\Рабочий стол\Compile_v2\obj\Debug\net7.0-windows\ref\Compile_v2.dll
+D:\Учеба\ТФЯТ\Compile_v2\bin\Debug\net7.0-windows\Compile_v2.exe
+D:\Учеба\ТФЯТ\Compile_v2\bin\Debug\net7.0-windows\Compile_v2.deps.json
+D:\Учеба\ТФЯТ\Compile_v2\bin\Debug\net7.0-windows\Compile_v2.runtimeconfig.json
+D:\Учеба\ТФЯТ\Compile_v2\bin\Debug\net7.0-windows\Compile_v2.dll
+D:\Учеба\ТФЯТ\Compile_v2\bin\Debug\net7.0-windows\Compile_v2.pdb
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\Compile_v2.csproj.AssemblyReference.cache
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\MainWindow.g.cs
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\App.g.cs
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\Compile_v2_MarkupCompile.cache
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\Compile_v2_MarkupCompile.lref
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\MainWindow.baml
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\Compile_v2.g.resources
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\Compile_v2.GeneratedMSBuildEditorConfig.editorconfig
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\Compile_v2.AssemblyInfoInputs.cache
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\Compile_v2.AssemblyInfo.cs
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\Compile_v2.csproj.CoreCompileInputs.cache
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\Compile_v2.dll
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\refint\Compile_v2.dll
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\Compile_v2.pdb
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\Compile_v2.genruntimeconfig.cache
+D:\Учеба\ТФЯТ\Compile_v2\obj\Debug\net7.0-windows\ref\Compile_v2.dll

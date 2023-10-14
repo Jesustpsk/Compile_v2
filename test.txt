@@ -11,9 +11,9 @@ begin
     begin
         writeln id;
     end
-    
+    /* abcabfa = 1247124 */
     switch id3
     case 1: writeln "One";
     case 2: writeln "Two";
     case 3: writeln "Three";
-    end. 
+end 

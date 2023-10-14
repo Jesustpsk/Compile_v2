@@ -32,7 +32,7 @@ namespace Compile_v2
             var input = TbInput.Text;
 
             // Удаление комментариев
-            input = RemoveComments(input);
+            input = LexicalAnalyze.RemoveComments(input);
 
             // Разделение на лексемы
             //var lexemes = Analyze(input);
@@ -43,39 +43,13 @@ namespace Compile_v2
             {
                 AsmOutput.Text += lexeme + Environment.NewLine;
             }*/
-            var separators = "";
-            var keywords = "";
-            var variable = "";
-            foreach (var i in LexicalAnalyze.Analyze(input)[0])
-            {
-                separators += i.Value + "\n";
-            }
-            foreach (var i in LexicalAnalyze.Analyze(input)[1])
-            {
-                keywords += i.Value + "\n";
-            }
-            foreach (var i in LexicalAnalyze.Analyze(input)[2])
-            {
-                variable += i.Value + "\n";
-            }
+            var separators = LexicalAnalyze.LexAnalyze(input)[0].Aggregate("", (current, i) => current + (i.Value + "\n"));
+            var keywords = LexicalAnalyze.LexAnalyze(input)[1].Aggregate("", (current, i) => current + (i.Value + "\n"));
+            var variable = LexicalAnalyze.LexAnalyze(input)[2].Aggregate("", (current, i) => current + (i.Value + "\n"));
             TbOutSeparatorsWords.Text = separators;
             TbOutKeyWords.Text = keywords;
             TbOutVariableWords.Text = variable;
-        }
-
-        private string RemoveComments(string input)
-        {
-            var startIndex = input.IndexOf('{');
-            var endIndex = input.IndexOf('}');
-            while (startIndex >= 0 && endIndex > startIndex)
-            {
-                var comment = input.Substring(startIndex, endIndex - startIndex + 1);
-                input = input.Replace(comment, "");
-                startIndex = input.IndexOf('{');
-                endIndex = input.IndexOf('}');
-            }
-
-            return input;
+            AsmOutput.Text = String.Join("\r\n",LexicalAnalyze.Tokenize(input));
         }
     }
 }
