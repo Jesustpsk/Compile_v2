@@ -95,7 +95,13 @@ public class SyntaxAnalyze
             if (Match("("))
             {
                 while (!Match("{"))
+                {
+                    var temp = currentIndex;
                     MatchExpression();
+                    if (temp == currentIndex)
+                        break;
+                }
+
                 currentIndex--;
                 if (Match("{"))
                 {
@@ -147,7 +153,18 @@ public class SyntaxAnalyze
         }
         else if (Match("while"))
         {
-            if (MatchExpression() && Match("do"))
+            if (Match("("))
+            {
+                while (!Match("do"))
+                {
+                    var temp = currentIndex;
+                    MatchExpression();
+                    if (temp == currentIndex)
+                        break;
+                }
+            }
+            currentIndex--;
+            if (Match("do"))
             {
                 AnalyzeStatement();
                 return;
