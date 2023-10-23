@@ -12,6 +12,7 @@ public class LexicalAnalyze
     private static List<Token> separators = new();
     private static List<Token> keyWords = new();
     private static List<Token> variables = new();
+    public static List<Token> Tokens = new();
     
     private static Regex separatorsRegex = new (@"[{}():,;+\-*/=]");
     private static Regex keyWordsRegex = new (@"\b(program|var|begin|end|switch|case|for|each|in|while|do|readln|writeln)\b");
@@ -68,7 +69,7 @@ public class LexicalAnalyze
     }
     private static bool IsReal(string word)
     {
-        return double.TryParse(word, out double value);
+        return double.TryParse(word.Replace('.',','), out double value);
     }
     private static bool IsBoolean(string word)
     {
@@ -144,52 +145,133 @@ public class LexicalAnalyze
         var v = SDistinct(variables);
         return new[] {sep, kw, v};
     }
-    public static List<string> Tokenize(string input)
+    /*public static void Tokenize(string input)
     {
-        var allList = separatorsList.Concat(keyWordsList).ToArray();
-        var lexemes = new List<string>();
-            
+        Tokens.Clear();
         var words = input.Split(new []{"\r\n", " "}.Concat(separatorsList).ToArray(), StringSplitOptions.RemoveEmptyEntries);
         foreach (var word in words)
         {
             if (IsKeyWord(word))
             {
-                lexemes.Add("KEY WORD: " + word);
+                Tokens.Add(new Token(word, Token.TokenType.KeyWord));
             }
             else if (IsSeparator(word))
             {
-                lexemes.Add("SEPARATOR: " + word);
+                Tokens.Add(new Token(word, Token.TokenType.Separator));
             }
             else if (IsIdentifier(word))
             {
-                lexemes.Add("IDENTIFIER: " + word);
+                Tokens.Add(new Token(word, Token.TokenType.Variable));
             }
             else if (IsInteger(word))
             {
-                lexemes.Add("INTEGER: " + word);
+                Tokens.Add(new Token(word, Token.TokenType.Variable));
             }
             else if (IsReal(word))
             {
-                lexemes.Add("REAL: " + word);
+                Tokens.Add(new Token(word, Token.TokenType.Variable));
             }
             else if (IsBoolean(word))
             {
-                lexemes.Add("BOOLEAN: " + word);
+                Tokens.Add(new Token(word, Token.TokenType.Variable));
             }
             else if (IsChar(word))
             {
-                lexemes.Add("CHAR: " + word);
+                Tokens.Add(new Token(word, Token.TokenType.Variable));
             }
             else if (IsString(word))
             {
-                lexemes.Add("STRING: " + word);
+                Tokens.Add(new Token(word, Token.TokenType.Variable));
             }
             else
             {
-                lexemes.Add("UNKNOWN: " + word);
+                Tokens.Add(new Token(word, Token.TokenType.Variable));
             }
         }
+    }*/
+    public static void Tokenize(string input)
+    {
+        Tokens.Clear();
+        var separators = new[] { "{", "}", "(", ")", ":", ",", ";", "+", "\\", "-", "*", "/", "=" };
+    
+        var currentToken = "";
+    
+        foreach (var character in input)
+        {
+            if (char.IsWhiteSpace(character))
+            {
+                // Пропускаем пробелы и символы новой строки
+                if (!string.IsNullOrEmpty(currentToken))
+                {
+                    AddToken(currentToken);
+                    currentToken = "";
+                }
+            }
+            else if (separators.Contains(character.ToString()))
+            {
+                if (!string.IsNullOrEmpty(currentToken))
+                {
+                    AddToken(currentToken);
+                    currentToken = "";
+                }
+            
+                Tokens.Add(new Token(character.ToString(), Token.TokenType.Separator));
+            }
+            else
+            {
+                currentToken += character;
+            }
+        }
+    
+        if (!string.IsNullOrEmpty(currentToken))
+        {
+            AddToken(currentToken);
+        }
+    }
 
-        return lexemes;
+    private static void AddToken(string word)
+    {
+        if (IsKeyWord(word))
+        {
+            Tokens.Add(new Token(word, Token.TokenType.KeyWord));
+        }
+        else if (IsIdentifier(word))
+        {
+            Tokens.Add(new Token(word, Token.TokenType.Variable));
+        }
+        else if (IsInteger(word))
+        {
+            Tokens.Add(new Token(word, Token.TokenType.Variable));
+        }
+        else if (IsReal(word))
+        {
+            Tokens.Add(new Token(word, Token.TokenType.Variable));
+        }
+        else if (IsBoolean(word))
+        {
+            Tokens.Add(new Token(word, Token.TokenType.Variable));
+        }
+        else if (IsChar(word))
+        {
+            Tokens.Add(new Token(word, Token.TokenType.Variable));
+        }
+        else if (IsString(word))
+        {
+            Tokens.Add(new Token(word, Token.TokenType.Variable));
+        }
+        else
+        {
+            Tokens.Add(new Token(word, Token.TokenType.Unknown));
+        }
+    }
+    public static string[] Token2String()
+    {
+        var output = new string[Tokens.Count];
+        for (var i = 0; i < Tokens.Count; i++)
+        {
+            output[i] = Tokens[i].Value + " => " + Tokens[i].Type;
+        }
+
+        return output;
     }
 }

@@ -7,7 +7,6 @@ public class Token : INotifyPropertyChanged
 {
     private string _value;
     private TokenType _type;
-
     public Token(string matchValue, TokenType separator)
     {
         Value = matchValue;
@@ -44,6 +43,7 @@ public class Token : INotifyPropertyChanged
     {
         Separator,
         KeyWord,
-        Variable
+        Variable,
+        Unknown
     }
 }

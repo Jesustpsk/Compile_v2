@@ -42,21 +42,28 @@
                 Margin="0 100 0 0">Save</Button>
         
         <Label Grid.Row="3" Grid.Column="1" Width="80" Height="30"
-               Margin="260 0 0 150">Key Words</Label>
-        <TextBox Grid.Row="3" Grid.Column="1" Width="200" Height="150"
-                 Margin="240 30 0 0" Name="TbOutKeyWords">
+               Margin="0 0 280 150">Key Words</Label>
+        <TextBox Grid.Row="3" Grid.Column="1" Width="150" Height="150"
+                 Margin="0 30 305 0" Name="TbOutKeyWords">
         </TextBox>
         
-        <Label Grid.Row="3" Grid.Column="2" Width="100" Height="30"
+        <Label Grid.Row="3" Grid.Column="1" Width="100" Height="30"
                Margin="0 0 0 150">Separator Words</Label>
-        <TextBox Grid.Row="3" Grid.Column="2" Width="200" Height="150"
+        <TextBox Grid.Row="3" Grid.Column="1" Width="150" Height="150"
                  Margin="0 30 0 0" Name="TbOutSeparatorsWords">
         </TextBox>
         
+        <Label Grid.Row="3" Grid.Column="1" Width="90" Height="30"
+               Margin="300 0 0 150">Variable Words</Label>
+        <TextBox Grid.Row="3" Grid.Column="1" Width="150" Height="150"
+                 Margin="305 30 0 0" Name="TbOutVariableWords">
+        </TextBox>
+        
+        
         <Label Grid.Row="3" Grid.Column="3" Width="90" Height="30"
-               Margin="0 0 250 150">Variable Words</Label>
-        <TextBox Grid.Row="3" Grid.Column="3" Width="200" Height="150"
-                 Margin="0 30 240 0" Name="TbOutVariableWords">
+               Margin="0 0 0 150">Syntax Analyze</Label>
+        <TextBox Grid.Row="3" Grid.Column="3" Width="450" Height="150"
+                 Margin="0 30 0 0" Name="TbOutSyntaxAnalyze">
         </TextBox>
     </Grid>
 </Window>

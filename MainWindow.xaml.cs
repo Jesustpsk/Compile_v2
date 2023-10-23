@@ -31,25 +31,18 @@ namespace Compile_v2
             TbOutVariableWords.Text = "";
             var input = TbInput.Text;
 
-            // Удаление комментариев
             input = LexicalAnalyze.RemoveComments(input);
-
-            // Разделение на лексемы
-            //var lexemes = Analyze(input);
-            //Tokenize(input);
-            // Вывод результатов
+            
             AsmOutput.Text = "";
-            /*foreach (var lexeme in lexemes)
-            {
-                AsmOutput.Text += lexeme + Environment.NewLine;
-            }*/
             var separators = LexicalAnalyze.LexAnalyze(input)[0].Aggregate("", (current, i) => current + (i.Value + "\n"));
             var keywords = LexicalAnalyze.LexAnalyze(input)[1].Aggregate("", (current, i) => current + (i.Value + "\n"));
             var variable = LexicalAnalyze.LexAnalyze(input)[2].Aggregate("", (current, i) => current + (i.Value + "\n"));
             TbOutSeparatorsWords.Text = separators;
             TbOutKeyWords.Text = keywords;
             TbOutVariableWords.Text = variable;
-            AsmOutput.Text = String.Join("\r\n",LexicalAnalyze.Tokenize(input));
+            LexicalAnalyze.Tokenize(input);
+            AsmOutput.Text = string.Join("\r\n", LexicalAnalyze.Token2String());
+            TbOutSyntaxAnalyze.Text = SyntaxAnalyze.AnalyzeProgram();
         }
     }
 }
