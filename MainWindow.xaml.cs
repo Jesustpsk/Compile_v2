@@ -30,6 +30,7 @@ namespace Compile_v2
             TbOutSeparatorsWords.Text = "";
             TbOutKeyWords.Text = "";
             TbOutVariableWords.Text = "";
+            TbOutSyntaxAnalyze.Text = "";
             var input = TbInput.Text;
 
             input = LexicalAnalyzer.RemoveComments(input);
@@ -43,7 +44,14 @@ namespace Compile_v2
             TbOutVariableWords.Text = variable;
             LexicalAnalyzer.Tokenize(input);
             AsmOutput.Text = string.Join("\r\n", LexicalAnalyzer.TokensToStringArray());
-            TbOutSyntaxAnalyze.Text = SyntaxAnalyzer.ParseProgram();
+            try
+            {
+                TbOutSyntaxAnalyze.Text = SyntaxAnalyzer.ParseProgram();
+            }
+            catch (Exception ex)
+            {
+                TbOutSyntaxAnalyze.Text = ex.ToString();
+            }
         }
     }
 }

@@ -7,12 +7,8 @@ begin
     result = x * y + 5.5;
     switch result > 100{
         case true:
-        {
             writeln("True");
-        }
         case false:
-        {
             writeln("False");
-        }
     }
 end

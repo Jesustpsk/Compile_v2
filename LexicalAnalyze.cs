@@ -93,10 +93,11 @@ namespace Compile_v2
                 }
                 else if (separators.Contains(character.ToString()))
                 {
-                    if (string.IsNullOrEmpty(currentToken)) continue;
+                    if (!string.IsNullOrEmpty(currentToken))
+                    {
                         AddToken(currentToken);
                         currentToken = "";
-
+                    }
                     Tokens.Add(new Token(character.ToString(), Token.TokenType.Separator));
                 }
                 else

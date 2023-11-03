@@ -24,6 +24,8 @@ namespace SyntaxAnalyze
 
             while (CurrentToken.Value != "end")
             {
+                if(currentIndex == tokens.Count - 1 && CurrentToken.Value != "end")
+                    MatchKeyword("end");
                 ParseStatement();
                 if (CurrentToken.Value == ";")
                     Match(";");
@@ -39,8 +41,15 @@ namespace SyntaxAnalyze
             while (IsIdentifier(CurrentToken.Value))
             {
                 if (CurrentToken.Value == "begin") return;
-                ParseVariableDeclaration();
-                Match(";");
+                try
+                {
+                    ParseVariableDeclaration();
+                    Match(";");
+                }
+                catch (Exception)
+                {
+                    MatchKeyword("begin");
+                }
             }
         }
 
