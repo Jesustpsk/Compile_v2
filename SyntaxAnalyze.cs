@@ -1,319 +1,335 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows;
+using System.Text.RegularExpressions;
+using Compile_v2;
 
-namespace Compile_v2;
-
-public class SyntaxAnalyze
+namespace SyntaxAnalyze
 {
-    private static int currentIndex = 0;
-    private static string analyze;
-
-    public static string AnalyzeProgram()
+    public class SyntaxAnalyzer
     {
-        analyze = "";
-        if (Match("program"))
-        {
-            if (MatchIdentifier())
-            {
-                if (Match("var"))
-                {
-                    while (!Match("begin"))
-                    {
-                        AnalyzeDescription();
-                    }
-                    currentIndex--;
-                    if (Match("begin"))
-                    {
-                        while (!Match("end."))
-                        {
-                            AnalyzeStatement();
-                        }
+        private static List<Token> tokens;
+        private static int currentIndex;
 
-                        currentIndex--;
-                        if (Match("end."))
-                        {
-                            analyze += "Program syntax is correct.\n";
-                        }
-                        else
-                        {
-                            analyze += "Expected 'end.'.\n";
-                        }
-                    }
-                    else
-                    {
-                        analyze += "Expected 'begin'.\n";
-                    }
-                }
-                else
-                {
-                    analyze += "Expected 'var'.\n";
-                }
+        public static string ParseProgram()
+        {
+            currentIndex = 0;
+            tokens = LexicalAnalyzer.Tokens;
+            // Парсим начало программы
+            MatchKeyword("program");
+            MatchIdentifier();
+            MatchKeyword("var");
+
+            // Парсим описание
+            ParseDescription();
+
+            MatchKeyword("begin");
+
+            // Парсим операторы
+            while (CurrentToken.Value != "end")
+            {
+                ParseStatement();
+                if (CurrentToken.Value == ";")
+                    Match(";");
+            }
+
+            MatchKeyword("end");
+
+            return "Синтаксический анализ успешно завершен.";
+        }
+
+        private static void ParseDescription()
+        {
+            while (IsIdentifier(CurrentToken.Value))
+            {
+                if (CurrentToken.Value == "begin") return;
+                ParseVariableDeclaration();
+                Match(";");
+            }
+        }
+
+        private static void ParseVariableDeclaration()
+        {
+            MatchIdentifier();
+            while (CurrentToken.Value == ",")
+            {
+                Match(",");
+                MatchIdentifier();
+            }
+            Match(":");
+            MatchType();
+        }
+
+        private static void ParseStatement()
+        {
+            // Реализуйте парсинг оператора согласно вашей грамматике
+            // Пример:
+            if (CurrentToken.Value == "switch")
+            {
+                ParseSwitchStatement();
+            }
+            else if (CurrentToken.Value == "for" && LookAhead(1).Value == "each")
+            {
+                ParseForEachStatement();
+            }
+            else if (CurrentToken.Value == "while")
+            {
+                ParseWhileStatement();
+            }
+            else if (CurrentToken.Value == "readln")
+            {
+                ParseReadlnStatement();
+            }
+            else if (CurrentToken.Value == "writeln")
+            {
+                ParseWritelnStatement();
             }
             else
             {
-                analyze += "Expected identifier.\n";
+                ParseExpression();
             }
         }
-        else
+
+        private static void ParseSwitchStatement()
         {
-            analyze += "Expected 'program'.\n";
-        }
+            // Реализация парсинга оператора switch
+            MatchKeyword("switch");
+            // Дополнительный код разбора оператора switch
+            // Пример:
+            ParseExpression(); // Разбор выражения для выбора ветки
+            Match("{");
 
-        return analyze;
-    }
-
-    private static void AnalyzeDescription()
-    {
-        if (MatchIdentifier())
-        {
-            while (Match(","))
+            while (CurrentToken.Value != "}")
             {
-                if (MatchIdentifier()) continue;
-                analyze += "Expected identifier.\n";
-                break;
-            }
-
-            if (Match(":"))
-            {
-                if (MatchType())
+                if (CurrentToken.Value == "case")
                 {
-                    if (Match(";"))
-                    {
-                        return;
-                    }
-                }
-            }
-        }
-        analyze += "Invalid variable declaration.\n";
-    }
-
-    private static void AnalyzeStatement()
-    {
-        if (Match("switch"))
-        {
-            if (Match("("))
-            {
-                while (!Match("{"))
-                {
-                    var temp = currentIndex;
-                    MatchExpression();
-                    if (temp == currentIndex)
-                        break;
-                }
-
-                currentIndex--;
-                if (Match("{"))
-                {
-                    while (Match("case"))
-                    {
-                        if (!MatchConstant()) continue;
-                        if (Match(":"))
-                        {
-                            AnalyzeStatement();
-                        }
-                    }
-
-                    if (Match("}"))
-                    {
-                        return;
-                    }
-                }
-            }
-            analyze += "Invalid switch statement.\n";
-        }
-        else if (Match("for"))
-        {
-            if (Match("each") && MatchIdentifier() && Match("in") && Match("("))
-            {
-                if (MatchConstant())
-                {
-                    while (Match(",") && MatchConstant())
-                    {
-                    }
-
-                    if (Match(")"))
-                    {
-                        AnalyzeStatement();
-                    }
-                    else
-                    {
-                        analyze += "Expected ')'.\n";
-                    }
+                    MatchKeyword("case");
+                    ParseExpression(); // Разбор константы для case
+                    Match(":");
+                    // Разбор операторов для данной ветки case
+                    ParseBlock();
                 }
                 else
                 {
-                    analyze += "Invalid constant list.\n";
+                    // Обработка других операторов внутри switch
+                    // parseOtherStatement();
                 }
+            }
+
+            Match("}");
+        }
+
+        private static void ParseForEachStatement()
+        {
+            // Реализация парсинга оператора for each
+            MatchKeyword("for");
+            MatchKeyword("each");
+            // Дополнительный код разбора оператора for each
+            // Пример:
+            MatchIdentifier(); // Имя переменной
+            MatchKeyword("in");
+            Match("(");
+            while (CurrentToken.Value != ")")
+            {
+                ParseConstant(); // Разбор констант для цикла for each
+                if (CurrentToken.Value == ",")
+                {
+                    Match(",");
+                }
+            }
+
+            Match(")");
+            // Разбор операторов внутри цикла for each
+            ParseBlock();
+        }
+
+        private static void ParseWhileStatement()
+        {
+            // Реализация парсинга оператора while
+            MatchKeyword("while");
+            // Разбор условия
+            ParseExpression();
+            // Разбор операторов внутри цикла while
+            ParseBlock();
+        }
+
+        private static void ParseReadlnStatement()
+        {
+            // Реализация парсинга оператора readln
+            MatchKeyword("readln");
+            Match("(");
+            MatchIdentifier(); // Идентификатор переменной
+            while (CurrentToken.Value == ",")
+            {
+                Match(",");
+                MatchIdentifier(); // Идентификаторы переменных
+            }
+
+            Match(")");
+        }
+
+        private static void ParseWritelnStatement()
+        {
+            // Реализация парсинга оператора writeln
+            MatchKeyword("writeln");
+            Match("(");
+            ParseExpression(); // Разбор выражения для вывода
+            while (CurrentToken.Value == ",")
+            {
+                Match(",");
+                ParseExpression(); // Дополнительные выражения для вывода
+            }
+
+            Match(")");
+        }
+        
+        private static void ParseBlock()
+        {
+            Match("{");
+            while (CurrentToken.Value != "}")
+            {
+                ParseStatement();
+                if (CurrentToken.Value == ";")
+                    Match(";");
+            }
+            Match("}");
+        }
+
+        private static void ParseConstant()
+        {
+            MatchIdentifier();
+            if (IsNumericConstant(CurrentToken.Value))
+            {
+                // Парсинг числовой константы
+                ConsumeToken();
             }
             else
             {
-                analyze += "Invalid for statement.\n";
+                throw new Exception($"Ожидается константа, но получено '{CurrentToken.Value}'");
             }
         }
-        else if (Match("while"))
+
+        private static void ParseExpression()
         {
-            if (Match("("))
+            // Ваш код разбора выражения с учетом приоритетов и синтаксиса вашего языка
+            // Пример:
+            ParseTerm();
+            while (IsOperator(CurrentToken.Value))
             {
-                while (!Match("do"))
-                {
-                    var temp = currentIndex;
-                    MatchExpression();
-                    if (temp == currentIndex)
-                        break;
-                }
+                MatchOperator(CurrentToken.Value);
+                ParseTerm();
             }
-            currentIndex--;
-            if (Match("do"))
+        }
+
+        private static void ParseTerm()
+        {
+            // Разбор терма
+            // Пример:
+            if (CurrentToken.Type == Token.TokenType.Variable)
             {
-                AnalyzeStatement();
-                return;
+                ConsumeToken();
             }
-            analyze += "Invalid while statement.\n";
-        }
-        else if (Match("readln"))
-        {
-            if (MatchIdentifier())
+            else
             {
-                while (Match(",") && MatchIdentifier())
-                {
-                }
-
-                if (Match(";"))
-                {
-                    return;
-                }
+                throw new Exception($"Ожидается переменная или константа, но получено '{CurrentToken.Value}'");
             }
-            analyze += "Invalid readln statement.\n";
         }
-        else if (Match("writeln"))
+        private static bool IsNumericConstant(string value)
         {
-            if (Match("("))
+            double result;
+            return double.TryParse(value, out result);
+        }
+        private static bool IsOperator(string value)
+        {
+            // Реализация проверки на операторы в вашем языке
+            // Например:
+            return value == "+" || value == "-" || value == "*" || value == "/" || value == "=" || value == ">" || value == "<";
+        }
+
+        private static void MatchOperator(string expected)
+        {
+            if (IsOperator(CurrentToken.Value) && CurrentToken.Value == expected)
             {
-                while (!Match(";"))
-                {
-                    MatchExpression();
-                }
-
-                currentIndex--;
-                if (Match(";"))
-                {
-                    return;
-                }
+                ConsumeToken();
             }
-            analyze += "Invalid writeln statement.\n";
-        }
-        else if (MatchIdentifier() && Match("="))
-        {
-            while (!Match(";"))
+            else
             {
-                MatchExpression();
-                if (currentIndex != LexicalAnalyze.Tokens.Count) continue;
-                analyze += "Expected ';'.\n";
-                return;
+                throw new Exception($"Ожидается оператор '{expected}', но получено '{CurrentToken.Value}'");
             }
-            return;
         }
-        else
+
+
+        private static void Match(string expected)
         {
-            analyze += "Invalid statement.\n";
+            if (CurrentToken.Value == expected)
+            {
+                ConsumeToken();
+            }
+            else
+            {
+                throw new Exception($"Ожидается '{expected}', но получено '{CurrentToken.Value}'");
+            }
         }
-    }
 
-    private static bool Match(string expected)
-    {
-        if (currentIndex >= LexicalAnalyze.Tokens.Count || LexicalAnalyze.Tokens[currentIndex].Value != expected) return false;
-        currentIndex++;
-        return true;
-    }
-
-    private static bool MatchIdentifier()
-    {
-        if (currentIndex >= LexicalAnalyze.Tokens.Count || LexicalAnalyze.Tokens[currentIndex].Type != Token.TokenType.Variable) return false;
-        currentIndex++;
-        return true;
-    }
-
-    private static bool MatchType()
-    {
-        if (currentIndex >= LexicalAnalyze.Tokens.Count || (LexicalAnalyze.Tokens[currentIndex].Value != "integer" &&
-                                                            LexicalAnalyze.Tokens[currentIndex].Value != "real" &&
-                                                            LexicalAnalyze.Tokens[currentIndex].Value != "boolean")) return false;
-        currentIndex++;
-        return true;
-    }
-
-    private static bool MatchExpression()
-    {
-        return MatchIdentifier() || MatchConstant() || Match("+") || Match("-") || Match("/") || Match("*") || Match("(") || Match(")") || Match("==") || Match(">") || Match("<") || Match(">=") || Match("<=") || Match("!=");
-    }
-
-    private static bool MatchConstant()
-    {
-        // Пример: Разбор целых чисел
-        if (currentIndex < LexicalAnalyze.Tokens.Count && LexicalAnalyze.Tokens[currentIndex].Type == Token.TokenType.Variable &&
-            IsInteger(LexicalAnalyze.Tokens[currentIndex].Value))
+        private static void MatchKeyword(string keyword)
         {
-            currentIndex++;
-            return true;
+            Match(keyword);
         }
 
-        // Пример: Разбор действительных чисел
-        if (currentIndex < LexicalAnalyze.Tokens.Count && LexicalAnalyze.Tokens[currentIndex].Type == Token.TokenType.Variable &&
-            IsReal(LexicalAnalyze.Tokens[currentIndex].Value))
+        private static void MatchIdentifier()
         {
-            currentIndex++;
-            return true;
+            if (IsIdentifier(CurrentToken.Value))
+            {
+                ConsumeToken();
+            }
+            else
+            {
+                throw new Exception($"Ожидается идентификатор, но получено '{CurrentToken.Value}'");
+            }
         }
 
-        // Пример: Разбор логических значений
-        if (currentIndex < LexicalAnalyze.Tokens.Count && LexicalAnalyze.Tokens[currentIndex].Type == Token.TokenType.Variable &&
-            IsBoolean(LexicalAnalyze.Tokens[currentIndex].Value))
+        private static void MatchType()
         {
-            currentIndex++;
-            return true;
+            if (IsType(CurrentToken.Value))
+            {
+                ConsumeToken();
+            }
+            else
+            {
+                throw new Exception($"Ожидается тип, но получено '{CurrentToken.Value}'");
+            }
         }
 
-        if (currentIndex < LexicalAnalyze.Tokens.Count && LexicalAnalyze.Tokens[currentIndex].Type == Token.TokenType.Variable &&
-            IsChar(LexicalAnalyze.Tokens[currentIndex].Value))
+        private static void ConsumeToken()
         {
-            currentIndex++;
-            return true;
+            if (currentIndex < tokens.Count - 1)
+            {
+                currentIndex++;
+            }
         }
 
-        if (currentIndex < LexicalAnalyze.Tokens.Count && LexicalAnalyze.Tokens[currentIndex].Type == Token.TokenType.Variable &&
-            IsString(LexicalAnalyze.Tokens[currentIndex].Value))
+        private static Token CurrentToken => tokens[currentIndex];
+
+        private static Token LookAhead(int count)
         {
-            currentIndex++;
-            return true;
+            if (currentIndex + count < tokens.Count)
+            {
+                return tokens[currentIndex + count];
+            }
+            return new Token("", Token.TokenType.Unknown);
         }
 
-        // Добавьте другие правила разбора констант согласно вашей грамматике
-        return false;
-    }
+        private static bool IsIdentifier(string value)
+        {
+            // Реализация проверки идентификатора согласно вашей грамматике
+            // Пример:
+            return Regex.IsMatch(value, @"[a-zA-Z][a-zA-Z0-9]*");
+        }
 
-    private static bool IsInteger(string word)
-    {
-        return int.TryParse(word, out _);
-    }
-
-    private static bool IsReal(string word)
-    {
-        return double.TryParse(word.Replace('.', ','), out _);
-    }
-
-    private static bool IsBoolean(string word)
-    {
-        return word == "true" || word == "false";
-    }
-
-    private static bool IsChar(string word)
-    {
-        return word[0] == '\'' && word[^1] == '\'' && word.Length == 3;
-    }
-
-    private static bool IsString(string word)
-    {
-        return word[0] == '\"' && word[^1] == '\"' && word.Length >= 3;
+        private static bool IsType(string value)
+        {
+            // Реализация проверки типа согласно вашей грамматике
+            // Пример:
+            return value == "integer" || value == "real" || value == "boolean" || value == "char" || value == "string";
+        }
     }
 }
