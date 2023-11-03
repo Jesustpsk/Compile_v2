@@ -14,17 +14,14 @@ namespace SyntaxAnalyze
         {
             currentIndex = 0;
             tokens = LexicalAnalyzer.Tokens;
-            // Парсим начало программы
             MatchKeyword("program");
             MatchIdentifier();
             MatchKeyword("var");
 
-            // Парсим описание
             ParseDescription();
 
             MatchKeyword("begin");
 
-            // Парсим операторы
             while (CurrentToken.Value != "end")
             {
                 ParseStatement();
@@ -61,41 +58,33 @@ namespace SyntaxAnalyze
 
         private static void ParseStatement()
         {
-            // Реализуйте парсинг оператора согласно вашей грамматике
-            // Пример:
-            if (CurrentToken.Value == "switch")
+            switch (CurrentToken.Value)
             {
-                ParseSwitchStatement();
-            }
-            else if (CurrentToken.Value == "for" && LookAhead(1).Value == "each")
-            {
-                ParseForEachStatement();
-            }
-            else if (CurrentToken.Value == "while")
-            {
-                ParseWhileStatement();
-            }
-            else if (CurrentToken.Value == "readln")
-            {
-                ParseReadlnStatement();
-            }
-            else if (CurrentToken.Value == "writeln")
-            {
-                ParseWritelnStatement();
-            }
-            else
-            {
-                ParseExpression();
+                case "switch":
+                    ParseSwitchStatement();
+                    break;
+                case "for" when LookAhead(1).Value == "each":
+                    ParseForEachStatement();
+                    break;
+                case "while":
+                    ParseWhileStatement();
+                    break;
+                case "readln":
+                    ParseReadlnStatement();
+                    break;
+                case "writeln":
+                    ParseWritelnStatement();
+                    break;
+                default:
+                    ParseExpression();
+                    break;
             }
         }
 
         private static void ParseSwitchStatement()
         {
-            // Реализация парсинга оператора switch
             MatchKeyword("switch");
-            // Дополнительный код разбора оператора switch
-            // Пример:
-            ParseExpression(); // Разбор выражения для выбора ветки
+            ParseExpression();
             Match("{");
 
             while (CurrentToken.Value != "}")
@@ -103,15 +92,9 @@ namespace SyntaxAnalyze
                 if (CurrentToken.Value == "case")
                 {
                     MatchKeyword("case");
-                    ParseExpression(); // Разбор константы для case
+                    ParseExpression();
                     Match(":");
-                    // Разбор операторов для данной ветки case
                     ParseBlock();
-                }
-                else
-                {
-                    // Обработка других операторов внутри switch
-                    // parseOtherStatement();
                 }
             }
 
@@ -120,17 +103,14 @@ namespace SyntaxAnalyze
 
         private static void ParseForEachStatement()
         {
-            // Реализация парсинга оператора for each
             MatchKeyword("for");
             MatchKeyword("each");
-            // Дополнительный код разбора оператора for each
-            // Пример:
-            MatchIdentifier(); // Имя переменной
+            MatchIdentifier();
             MatchKeyword("in");
             Match("(");
             while (CurrentToken.Value != ")")
             {
-                ParseConstant(); // Разбор констант для цикла for each
+                ParseConstant();
                 if (CurrentToken.Value == ",")
                 {
                     Match(",");
@@ -138,30 +118,25 @@ namespace SyntaxAnalyze
             }
 
             Match(")");
-            // Разбор операторов внутри цикла for each
             ParseBlock();
         }
 
         private static void ParseWhileStatement()
         {
-            // Реализация парсинга оператора while
             MatchKeyword("while");
-            // Разбор условия
             ParseExpression();
-            // Разбор операторов внутри цикла while
             ParseBlock();
         }
 
         private static void ParseReadlnStatement()
         {
-            // Реализация парсинга оператора readln
             MatchKeyword("readln");
             Match("(");
-            MatchIdentifier(); // Идентификатор переменной
+            MatchIdentifier();
             while (CurrentToken.Value == ",")
             {
                 Match(",");
-                MatchIdentifier(); // Идентификаторы переменных
+                MatchIdentifier();
             }
 
             Match(")");
@@ -169,14 +144,13 @@ namespace SyntaxAnalyze
 
         private static void ParseWritelnStatement()
         {
-            // Реализация парсинга оператора writeln
             MatchKeyword("writeln");
             Match("(");
-            ParseExpression(); // Разбор выражения для вывода
+            ParseExpression();
             while (CurrentToken.Value == ",")
             {
                 Match(",");
-                ParseExpression(); // Дополнительные выражения для вывода
+                ParseExpression();
             }
 
             Match(")");
@@ -199,7 +173,6 @@ namespace SyntaxAnalyze
             MatchIdentifier();
             if (IsNumericConstant(CurrentToken.Value))
             {
-                // Парсинг числовой константы
                 ConsumeToken();
             }
             else
@@ -210,8 +183,6 @@ namespace SyntaxAnalyze
 
         private static void ParseExpression()
         {
-            // Ваш код разбора выражения с учетом приоритетов и синтаксиса вашего языка
-            // Пример:
             ParseTerm();
             while (IsOperator(CurrentToken.Value))
             {
@@ -222,8 +193,6 @@ namespace SyntaxAnalyze
 
         private static void ParseTerm()
         {
-            // Разбор терма
-            // Пример:
             if (CurrentToken.Type == Token.TokenType.Variable)
             {
                 ConsumeToken();
@@ -240,8 +209,6 @@ namespace SyntaxAnalyze
         }
         private static bool IsOperator(string value)
         {
-            // Реализация проверки на операторы в вашем языке
-            // Например:
             return value == "+" || value == "-" || value == "*" || value == "/" || value == "=" || value == ">" || value == "<";
         }
 
@@ -320,15 +287,11 @@ namespace SyntaxAnalyze
 
         private static bool IsIdentifier(string value)
         {
-            // Реализация проверки идентификатора согласно вашей грамматике
-            // Пример:
             return Regex.IsMatch(value, @"[a-zA-Z][a-zA-Z0-9]*");
         }
 
         private static bool IsType(string value)
         {
-            // Реализация проверки типа согласно вашей грамматике
-            // Пример:
             return value == "integer" || value == "real" || value == "boolean" || value == "char" || value == "string";
         }
     }
