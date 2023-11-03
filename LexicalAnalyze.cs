@@ -11,10 +11,10 @@ namespace Compile_v2
         private static List<Token> variables = new();
         public static List<Token> Tokens = new();
 
-        private static readonly Regex separatorsRegex = new Regex(@"[{}():,;+\-*/=]");
-        private static readonly Regex keywordsRegex = new Regex(@"\b(program|var|begin|end|switch|case|for|each|in|while|do|readln|writeln|integer|real|boolean|char|string)\b");
-        private static readonly Regex identifierRegex = new Regex(@"[a-zA-Z][a-zA-Z0-9]*");
-        private static readonly Regex digitsRegex = new Regex(@"[0-9]{1,8}(?:\.[0-9])?");
+        private static readonly Regex separatorsRegex = new(@"[{}():,;+\-*/=]");
+        private static readonly Regex keywordsRegex = new(@"\b(program|var|begin|end|switch|case|for|each|in|while|do|readln|writeln|integer|real|boolean|char|string)\b");
+        private static readonly Regex identifierRegex = new(@"[a-zA-Z][a-zA-Z0-9]*");
+        private static readonly Regex digitsRegex = new(@"[0-9]{1,8}(?:\.[0-9])?");
 
         public static string RemoveComments(string input)
         {
@@ -87,19 +87,15 @@ namespace Compile_v2
             {
                 if (char.IsWhiteSpace(character))
                 {
-                    if (!string.IsNullOrEmpty(currentToken))
-                    {
-                        AddToken(currentToken);
-                        currentToken = "";
-                    }
+                    if (string.IsNullOrEmpty(currentToken)) continue;
+                    AddToken(currentToken);
+                    currentToken = "";
                 }
                 else if (separators.Contains(character.ToString()))
                 {
-                    if (!string.IsNullOrEmpty(currentToken))
-                    {
+                    if (string.IsNullOrEmpty(currentToken)) continue;
                         AddToken(currentToken);
                         currentToken = "";
-                    }
 
                     Tokens.Add(new Token(character.ToString(), Token.TokenType.Separator));
                 }
