@@ -44,6 +44,11 @@ public class Token : INotifyPropertyChanged
         Separator,
         KeyWord,
         Variable,
+        Integer,
+        Real,
+        Boolean,
+        Char,
+        String,
         Unknown
     }
 }
