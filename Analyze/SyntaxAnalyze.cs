@@ -7,7 +7,7 @@ namespace SyntaxAnalyze
 {
     public class SyntaxAnalyzer
     {
-        private static List<Token> tokens;
+        public static List<Token> tokens;
         private static int currentIndex;
 
         public static string ParseProgram()

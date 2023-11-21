@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Compile_v2.Analyze;
 using SyntaxAnalyze;
 
 namespace Compile_v2
@@ -46,7 +47,15 @@ namespace Compile_v2
             AsmOutput.Text = string.Join("\r\n", LexicalAnalyzer.TokensToStringArray());
             try
             {
-                TbOutSyntaxAnalyze.Text = SyntaxAnalyzer.ParseProgram();
+                TbOutSyntaxAnalyze.Text = SyntaxAnalyzer.ParseProgram() + '\n';
+                try
+                {
+                    TbOutSyntaxAnalyze.Text += SemanticAnalyze.AnalyzeSemantic(SyntaxAnalyzer.tokens);
+                }
+                catch (Exception ex)
+                {
+                    TbOutSyntaxAnalyze.Text = ex.ToString();
+                }
             }
             catch (Exception ex)
             {
