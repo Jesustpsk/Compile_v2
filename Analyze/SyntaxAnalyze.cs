@@ -121,7 +121,7 @@ namespace SyntaxAnalyze
             Match("(");
             while (CurrentToken.Value != ")")
             {
-                ParseConstant();
+                ParseExpression();
                 if (CurrentToken.Value == ",")
                 {
                     Match(",");
