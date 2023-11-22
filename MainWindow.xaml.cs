@@ -51,6 +51,16 @@ namespace Compile_v2
                 try
                 {
                     TbOutSyntaxAnalyze.Text += SemanticAnalyze.AnalyzeSemantic(SyntaxAnalyzer.tokens);
+                    try
+                    {
+                        var result = ASMConverter.ConvertProgram();
+                        AsmOutput.Text = result[0];
+                        TbOutSyntaxAnalyze.Text += result[1];
+                    }
+                    catch (Exception ex)
+                    {
+                        TbOutSyntaxAnalyze.Text = ex.ToString();
+                    }
                 }
                 catch (Exception ex)
                 {

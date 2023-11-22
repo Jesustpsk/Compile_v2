@@ -13,11 +13,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\it_ta\\OneDrive\\Рабочий стол\\Proj\\Compile_v2\\Compile_v2.csproj",
+      "projectUniqueName": "C:\\Users\\it_ta\\OneDrive\\Рабочий стол\\Work\\Compile_v2\\Compile_v2.csproj",
       "projectName": "Compile_v2",
-      "projectPath": "C:\\Users\\it_ta\\OneDrive\\Рабочий стол\\Proj\\Compile_v2\\Compile_v2.csproj",
+      "projectPath": "C:\\Users\\it_ta\\OneDrive\\Рабочий стол\\Work\\Compile_v2\\Compile_v2.csproj",
       "packagesPath": "C:\\Users\\it_ta\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\it_ta\\OneDrive\\Рабочий стол\\Proj\\Compile_v2\\obj\\",
+      "outputPath": "C:\\Users\\it_ta\\OneDrive\\Рабочий стол\\Work\\Compile_v2\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\it_ta\\AppData\\Roaming\\NuGet\\NuGet.Config",
